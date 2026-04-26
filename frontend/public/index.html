@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VBS 2026 — Ridgeview Baptist Church</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem 1.5rem;
+    }
+    .hero__title {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: .5rem;
+    }
+    .hero__sub {
+      font-size: 1.125rem;
+      color: var(--muted);
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .info-tile {
+      text-align: center;
+      padding: 1.25rem 1rem;
+    }
+    .info-tile__label {
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+      margin-bottom: .375rem;
+    }
+    .info-tile__value {
+      font-size: 1.0625rem;
+      font-weight: 600;
+    }
+    .info-tile__detail {
+      font-size: .8125rem;
+      color: var(--muted);
+      margin-top: .125rem;
+    }
+    .cta {
+      text-align: center;
+      padding: 2rem 0 1rem;
+    }
+    .btn--lg {
+      font-size: 1.0625rem;
+      padding: .75rem 2.25rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <img class="site-header__logo" data-theme-logo src="" alt="" style="display:none">
+    <span class="site-header__title" data-theme-name>VBS 2026</span>
+  </header>
+
+  <div class="container" style="max-width:700px">
+    <div class="hero">
+      <h1 class="hero__title" data-theme-name>VBS 2026</h1>
+      <p class="hero__sub">Vacation Bible School at Ridgeview Baptist Church</p>
+    </div>
+
+    <div class="card info-grid" style="margin-bottom:1.5rem">
+      <div class="info-tile">
+        <div class="info-tile__label">Dates</div>
+        <div class="info-tile__value">June 7 – 11, 2026</div>
+        <div class="info-tile__detail">Sunday through Thursday</div>
+      </div>
+      <div class="info-tile">
+        <div class="info-tile__label">Ages</div>
+        <div class="info-tile__value">Preschool – 5th Grade</div>
+        <div class="info-tile__detail">All kids welcome</div>
+      </div>
+      <div class="info-tile">
+        <div class="info-tile__label">Cost</div>
+        <div class="info-tile__value">Free</div>
+        <div class="info-tile__detail">Open to all families</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem">
+      <h2 class="section-title">What is VBS?</h2>
+      <p style="color:var(--muted);line-height:1.75">
+        Vacation Bible School is a week of fun, faith, and friendship for kids. Each evening your children will experience Bible lessons, games, crafts, and music in a safe and welcoming environment — whether they've grown up in church or it's their first time.
+      </p>
+    </div>
+
+    <div class="cta">
+      <a href="/register/" class="btn btn--primary btn--lg">Register Now</a>
+      <p class="text-muted mt-4">Registration takes just a couple of minutes.</p>
+    </div>
+  </div>
+
+  <script type="module" src="/js/landing.js"></script>
+</body>
+</html>

@@ -46,7 +46,10 @@ export async function applyTheme() {
     document.title = s.theme_name;
     document.querySelectorAll('[data-theme-name]').forEach((el) => (el.textContent = s.theme_name));
     document.querySelectorAll('[data-theme-logo]').forEach((el) => {
-      if (s.logo_url) { el.src = s.logo_url; el.style.display = ''; }
+      if (s.logo_url) {
+        el.src = s.logo_url.startsWith('/') ? `${API_BASE}${s.logo_url}` : s.logo_url;
+        el.style.display = '';
+      }
     });
   } catch {
     // non-fatal
