@@ -21,6 +21,8 @@ async function init() {
   document.getElementById('walkin-add-child').addEventListener('click', addWalkInChild);
 
   await loadSessions();
+  // load stats independently — works even if sessions failed to populate
+  loadStats(currentSessionId);
 }
 
 async function loadSessions() {
@@ -48,7 +50,6 @@ async function loadSessions() {
       .join('');
     select.value = String(best.id);
     currentSessionId = best.id;
-    loadStats(currentSessionId);
 
     select.addEventListener('change', () => {
       currentSessionId = Number(select.value);
@@ -64,12 +65,14 @@ async function loadSessions() {
 
 async function loadStats(sessionId) {
   try {
-    const data = await api.get(`/api/checkin/stats?session_id=${sessionId}`);
+    const url = sessionId ? `/api/checkin/stats?session_id=${sessionId}` : '/api/checkin/stats';
+    const data = await api.get(url);
     if (!data) return;
+    console.log('stats:', data);
     document.getElementById('stat-total').textContent = data.total_children;
     document.getElementById('stat-checkedin').textContent = data.checked_in;
-  } catch {
-    // non-fatal
+  } catch (err) {
+    console.error('loadStats failed:', err);
   }
 }
 
