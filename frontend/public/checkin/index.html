@@ -5,6 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Check-In</title>
   <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .search-wrap {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .search-wrap__icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .search-wrap__input {
+      width: 100%;
+      padding: .875rem 1rem .875rem 3rem;
+      font-size: 1.0625rem;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font-family: inherit;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .search-wrap__input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+    }
+    .session-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: .5rem;
+      margin-bottom: .625rem;
+    }
+    .session-row label {
+      font-size: .8125rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .session-row select {
+      padding: .3rem .625rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: .875rem;
+      background: var(--surface);
+      color: var(--text);
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .session-row select:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -42,15 +100,17 @@
       </form>
     </div>
 
-    <div class="flex gap-2 items-center" style="margin-bottom:.75rem">
-      <label for="session-select" style="font-size:.875rem;font-weight:500;white-space:nowrap">Night:</label>
-      <select id="session-select" style="padding:.375rem .625rem;border:1px solid var(--border);border-radius:var(--radius);font-size:.875rem;background:var(--surface);color:var(--text)">
-        <option>Loading…</option>
-      </select>
+    <div class="session-row">
+      <label for="session-select">Night</label>
+      <select id="session-select"><option>Loading…</option></select>
     </div>
 
-    <div class="search-bar">
-      <input type="search" id="search-input" placeholder="Search by parent or child name, phone…" autocomplete="off">
+    <div class="search-wrap">
+      <svg class="search-wrap__icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input class="search-wrap__input" type="search" id="search-input"
+        placeholder="Search by name or phone…" autocomplete="off">
     </div>
 
     <div id="results"></div>
