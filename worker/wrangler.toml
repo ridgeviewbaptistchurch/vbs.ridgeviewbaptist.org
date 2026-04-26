@@ -1,6 +1,7 @@
 name = "vbs-api"
 main = "src/index.ts"
 compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
 account_id = "efdb9bf05190f003e42285057bfeca6f"
 
 [[d1_databases]]
