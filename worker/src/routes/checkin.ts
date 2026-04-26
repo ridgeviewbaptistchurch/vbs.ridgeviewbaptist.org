@@ -20,12 +20,12 @@ checkin.get('/search', async (c) => {
     `SELECT f.*, COUNT(ch.id) as child_count
      FROM families f
      LEFT JOIN children ch ON ch.family_id = f.id
-     WHERE f.vbs_year = ? AND (f.parent_name LIKE ? OR f.phone LIKE ?)
+     WHERE f.vbs_year = ? AND (f.parent_name LIKE ? OR f.phone LIKE ? OR ch.first_name LIKE ? OR ch.last_name LIKE ?)
      GROUP BY f.id
      ORDER BY f.parent_name
      LIMIT 20`,
   )
-    .bind(vbsYear, `%${q}%`, `%${q}%`)
+    .bind(vbsYear, `%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`)
     .all<Record<string, unknown>>();
 
   const familyIds = families.results.map((f) => f.id as number);
