@@ -24,9 +24,13 @@ async function init() {
 }
 
 async function loadSessions() {
+  const select = document.getElementById('session-select');
   try {
     const data = await api.get('/api/checkin/sessions');
-    if (!data?.sessions?.length) return;
+    if (!data?.sessions?.length) {
+      select.innerHTML = '<option value="">No sessions found</option>';
+      return;
+    }
 
     const today = new Date().toISOString().split('T')[0];
     const sessions = data.sessions;
@@ -39,11 +43,10 @@ async function loadSessions() {
       pastSessions.length ? pastSessions[pastSessions.length - 1] :
       sessions[0];
 
-    const select = document.getElementById('session-select');
     select.innerHTML = sessions
       .map((s) => `<option value="${s.id}">${s.label} — ${formatDate(s.date)}</option>`)
       .join('');
-    select.value = best.id;
+    select.value = String(best.id);
     currentSessionId = best.id;
 
     select.addEventListener('change', () => {
@@ -51,8 +54,9 @@ async function loadSessions() {
       const q = document.getElementById('search-input').value.trim();
       if (q) search(q);
     });
-  } catch {
-    // non-fatal — falls back to server auto-detect
+  } catch (err) {
+    console.error('loadSessions failed:', err);
+    select.innerHTML = '<option value="">Could not load sessions</option>';
   }
 }
 
