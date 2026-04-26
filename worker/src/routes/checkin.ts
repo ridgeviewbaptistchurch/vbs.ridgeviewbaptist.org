@@ -7,9 +7,21 @@ const checkin = new Hono<HonoEnv>();
 
 checkin.use('/*', authMiddleware);
 
+checkin.get('/sessions', async (c) => {
+  const settings = await activeYear(c.env.DB);
+  if (!settings) return c.json({ sessions: [] });
+  const rows = await c.env.DB.prepare(
+    'SELECT id, label, date FROM sessions WHERE vbs_year = ? ORDER BY date ASC',
+  )
+    .bind(settings.year)
+    .all();
+  return c.json({ sessions: rows.results });
+});
+
 checkin.get('/search', async (c) => {
   const q = (c.req.query('q') ?? '').trim();
   const yearParam = c.req.query('year');
+  const sessionIdParam = c.req.query('session_id');
 
   const settings = await activeYear(c.env.DB);
   const vbsYear = yearParam ? parseInt(yearParam) : settings?.year;
@@ -39,23 +51,25 @@ checkin.get('/search', async (c) => {
           .all<Record<string, unknown>>()
       : { results: [] as Record<string, unknown>[] };
 
-  const today = new Date().toISOString().split('T')[0];
-  const todaySession = await c.env.DB.prepare(
-    'SELECT id FROM sessions WHERE vbs_year = ? AND date = ? LIMIT 1',
-  )
-    .bind(vbsYear, today)
-    .first<{ id: number }>();
-
-  const sessionId =
-    todaySession?.id ??
-    (
-      await c.env.DB.prepare(
-        'SELECT id FROM sessions WHERE vbs_year = ? ORDER BY date DESC LIMIT 1',
-      )
-        .bind(vbsYear)
-        .first<{ id: number }>()
-    )?.id ??
-    null;
+  let sessionId: number | null = sessionIdParam ? parseInt(sessionIdParam) : null;
+  if (!sessionId) {
+    const today = new Date().toISOString().split('T')[0];
+    const todaySession = await c.env.DB.prepare(
+      'SELECT id FROM sessions WHERE vbs_year = ? AND date = ? LIMIT 1',
+    )
+      .bind(vbsYear, today)
+      .first<{ id: number }>();
+    sessionId =
+      todaySession?.id ??
+      (
+        await c.env.DB.prepare(
+          'SELECT id FROM sessions WHERE vbs_year = ? ORDER BY date DESC LIMIT 1',
+        )
+          .bind(vbsYear)
+          .first<{ id: number }>()
+      )?.id ??
+      null;
+  }
 
   const childIds = children.results.map((ch) => ch.id as number);
   const attendance =

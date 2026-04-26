@@ -19,6 +19,46 @@ async function init() {
   document.getElementById('walkin-cancel').addEventListener('click', hideWalkInForm);
   document.getElementById('walkin-form').addEventListener('submit', submitWalkIn);
   document.getElementById('walkin-add-child').addEventListener('click', addWalkInChild);
+
+  await loadSessions();
+}
+
+async function loadSessions() {
+  try {
+    const data = await api.get('/api/checkin/sessions');
+    if (!data?.sessions?.length) return;
+
+    const today = new Date().toISOString().split('T')[0];
+    const sessions = data.sessions;
+
+    // Pick today's session, or the most recent past one, or the first upcoming
+    const todayIdx = sessions.findIndex((s) => s.date === today);
+    const pastSessions = sessions.filter((s) => s.date < today);
+    const best =
+      todayIdx !== -1 ? sessions[todayIdx] :
+      pastSessions.length ? pastSessions[pastSessions.length - 1] :
+      sessions[0];
+
+    const select = document.getElementById('session-select');
+    select.innerHTML = sessions
+      .map((s) => `<option value="${s.id}">${s.label} — ${formatDate(s.date)}</option>`)
+      .join('');
+    select.value = best.id;
+    currentSessionId = best.id;
+
+    select.addEventListener('change', () => {
+      currentSessionId = Number(select.value);
+      const q = document.getElementById('search-input').value.trim();
+      if (q) search(q);
+    });
+  } catch {
+    // non-fatal — falls back to server auto-detect
+  }
+}
+
+function formatDate(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
 }
 
 function onSearch(e) {
@@ -29,9 +69,10 @@ function onSearch(e) {
 async function search(q) {
   if (!q) { document.getElementById('results').innerHTML = ''; return; }
   try {
-    const data = await api.get(`/api/checkin/search?q=${encodeURIComponent(q)}`);
+    const sessionParam = currentSessionId ? `&session_id=${currentSessionId}` : '';
+    const data = await api.get(`/api/checkin/search?q=${encodeURIComponent(q)}${sessionParam}`);
     if (!data) return;
-    currentSessionId = data.session_id;
+    if (!currentSessionId) currentSessionId = data.session_id;
     renderResults(data.families);
   } catch (err) {
     document.getElementById('results').innerHTML = `<p class="alert alert--error">${err.message}</p>`;
