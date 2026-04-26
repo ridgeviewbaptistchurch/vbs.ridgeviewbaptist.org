@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check-In</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+    <img class="site-header__logo" data-theme-logo src="" alt="" style="display:none">
+    <span class="site-header__title">VBS Check-In</span>
+    <nav class="site-header__nav">
+      <span id="user-name" class="text-muted"></span>
+      <button class="btn btn--secondary btn--sm" id="logout-btn">Log out</button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="flex gap-2 items-center justify-between" style="margin-bottom:1rem">
+      <h1 class="page-title" style="margin:0">Check-In</h1>
+      <button class="btn btn--secondary no-print" id="walkin-btn">+ Walk-In</button>
+    </div>
+
+    <div id="walkin-section" class="card hidden no-print" style="margin-bottom:1.5rem">
+      <h2 class="section-title">Register Walk-In Family</h2>
+      <form id="walkin-form">
+        <div class="form-row">
+          <div class="form-group"><label>Parent Name *</label><input type="text" name="parent_name" required></div>
+          <div class="form-group"><label>Phone *</label><input type="tel" name="phone" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Email</label><input type="email" name="email"></div>
+          <div class="form-group"><label>Home Church *</label><input type="text" name="home_church" required></div>
+        </div>
+        <div id="walkin-children"></div>
+        <button type="button" class="btn btn--secondary btn--sm" id="walkin-add-child" style="margin-bottom:1rem">+ Add Child</button>
+        <div class="flex gap-2">
+          <button type="submit" class="btn btn--primary">Register & Search</button>
+          <button type="button" class="btn btn--secondary" id="walkin-cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="search-bar">
+      <input type="search" id="search-input" placeholder="Search by last name or phone number…" autocomplete="off">
+    </div>
+
+    <div id="results"></div>
+  </div>
+
+  <script type="module" src="/js/checkin.js"></script>
+</body>
+</html>

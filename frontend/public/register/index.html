@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VBS Registration</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+    <img class="site-header__logo" data-theme-logo src="" alt="" style="display:none">
+    <span class="site-header__title" data-theme-name>VBS Registration</span>
+  </header>
+
+  <div class="container" style="max-width:640px">
+    <div id="success" class="alert alert--success hidden">
+      <strong>You're registered!</strong> Check your email for a confirmation.
+    </div>
+    <div id="error" class="alert alert--error hidden"></div>
+
+    <div class="card" id="form-card">
+      <h1 class="page-title" data-theme-name>VBS Registration</h1>
+      <p class="text-muted" style="margin-bottom:1.5rem">Register your children for this year's Vacation Bible School.</p>
+
+      <form id="reg-form">
+        <h2 class="section-title">Parent / Guardian</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="parent_name">Full Name *</label>
+            <input type="text" id="parent_name" name="parent_name" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone *</label>
+            <input type="tel" id="phone" name="phone" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="home_church">Home Church *</label>
+            <input type="text" id="home_church" name="home_church" placeholder="e.g. Ridgeview Baptist" required>
+          </div>
+        </div>
+
+        <h2 class="section-title" style="margin-top:1.5rem">Children</h2>
+        <div id="children-list"></div>
+        <button type="button" class="btn btn--secondary btn--sm" id="add-child" style="margin-bottom:1.5rem">
+          + Add Another Child
+        </button>
+
+        <button type="submit" class="btn btn--primary" id="submit-btn" style="width:100%">
+          Register
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <template id="child-template">
+    <div class="card child-entry" style="margin-bottom:1rem;position:relative">
+      <button type="button" class="btn btn--sm remove-child" style="position:absolute;top:.75rem;right:.75rem;background:none;border:none;color:var(--muted);font-size:1.25rem;cursor:pointer" aria-label="Remove">×</button>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" name="first_name" required>
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" name="last_name" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Grade Completed *</label>
+          <select name="grade" required>
+            <option value="">Select grade…</option>
+            <option value="K">Finished Kindergarten</option>
+            <option value="1">Finished 1st Grade</option>
+            <option value="2">Finished 2nd Grade</option>
+            <option value="3">Finished 3rd Grade</option>
+            <option value="4">Finished 4th Grade</option>
+            <option value="5">Finished 5th Grade</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Notes <span class="text-muted">(optional)</span></label>
+          <input type="text" name="notes" placeholder="Allergies, special needs…">
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script type="module" src="/js/register.js"></script>
+</body>
+</html>

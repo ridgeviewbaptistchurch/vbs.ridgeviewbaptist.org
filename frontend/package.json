@@ -1,0 +1,10 @@
+{
+  "name": "vbs-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "sync": "cp -r src/css/* public/css/ && cp -r src/js/* public/js/",
+    "dev": "npx serve public -l 3000",
+    "deploy": "wrangler pages deploy public --project-name=vbs-registration"
+  }
+}

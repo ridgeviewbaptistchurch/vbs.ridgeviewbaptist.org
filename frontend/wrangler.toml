@@ -1,0 +1,3 @@
+name = "vbs-registration"
+pages_build_output_dir = "public"
+account_id = "efdb9bf05190f003e42285057bfeca6f"

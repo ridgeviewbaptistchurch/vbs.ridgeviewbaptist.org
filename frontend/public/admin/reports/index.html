@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header class="site-header no-print">
+    <img class="site-header__logo" data-theme-logo src="" alt="" style="display:none">
+    <span class="site-header__title" data-theme-name>VBS Admin</span>
+    <nav class="site-header__nav">
+      <a href="/admin/">Dashboard</a>
+      <a href="/admin/families/">Families</a>
+      <a href="/admin/reports/">Reports</a>
+      <a href="/admin/settings/" id="settings-link" class="hidden">Settings</a>
+      <span id="user-name" class="text-muted"></span>
+      <button class="btn btn--secondary btn--sm" id="logout-btn">Log out</button>
+    </nav>
+  </header>
+
+  <div class="container container--wide">
+    <h1 class="page-title no-print">Reports</h1>
+
+    <div class="nav-tabs no-print">
+      <button class="nav-tab active" data-tab="grades">Grade Roster</button>
+      <button class="nav-tab" data-tab="attendance">Attendance Sheet</button>
+      <button class="nav-tab" data-tab="exports">CSV Export</button>
+    </div>
+
+    <!-- Grade roster -->
+    <div id="tab-grades">
+      <div class="flex gap-2 items-center no-print" style="margin-bottom:1rem">
+        <select id="grade-select" class="form-group" style="margin:0;width:auto">
+          <option value="">All Grades</option>
+          <option value="K">Kindergarten</option>
+          <option value="1">1st Grade</option>
+          <option value="2">2nd Grade</option>
+          <option value="3">3rd Grade</option>
+          <option value="4">4th Grade</option>
+          <option value="5">5th Grade</option>
+        </select>
+        <button class="btn btn--secondary btn--sm" onclick="window.print()">Print</button>
+      </div>
+      <div class="card" style="padding:0"><div class="table-wrap">
+        <table id="grade-table">
+          <thead><tr><th>Last Name</th><th>First Name</th><th>Grade</th><th>Parent</th><th>Phone</th><th>Notes</th></tr></thead>
+          <tbody id="grade-body"></tbody>
+        </table>
+      </div></div>
+    </div>
+
+    <!-- Attendance sheet -->
+    <div id="tab-attendance" class="hidden">
+      <div class="flex gap-2 items-center no-print" style="margin-bottom:1rem">
+        <select id="session-select" style="padding:.5rem .75rem;border:1px solid var(--border);border-radius:var(--radius);font-size:.875rem"></select>
+        <button class="btn btn--secondary btn--sm" onclick="window.print()">Print</button>
+      </div>
+      <div class="card" style="padding:0"><div class="table-wrap">
+        <table id="att-table">
+          <thead><tr><th>Last Name</th><th>First Name</th><th>Grade</th><th>Parent</th><th>Phone</th><th>✓</th></tr></thead>
+          <tbody id="att-body"></tbody>
+        </table>
+      </div></div>
+    </div>
+
+    <!-- CSV exports -->
+    <div id="tab-exports" class="hidden">
+      <div class="card">
+        <h2 class="section-title">Download CSV</h2>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="flex gap-2 items-center">
+            <div>
+              <strong>Families + Children</strong>
+              <p class="text-muted">All registered families with child details for the active year.</p>
+            </div>
+            <button class="btn btn--secondary btn--sm" id="export-families">Download</button>
+          </div>
+          <div class="flex gap-2 items-center">
+            <div>
+              <strong>Attendance</strong>
+              <p class="text-muted">All check-ins for the active year with session dates.</p>
+            </div>
+            <button class="btn btn--secondary btn--sm" id="export-attendance">Download</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/admin/reports.js"></script>
+</body>
+</html>

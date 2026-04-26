@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(node -e ' *)",
+      "Bash(npx wrangler *)",
+      "Bash(node -e \"console.log\\(require\\('crypto'\\).randomBytes\\(48\\).toString\\('base64url'\\)\\)\")",
+      "Bash(curl -s https://vbs-api.ridgeview.workers.dev/api/settings/active)",
+      "Bash(python -m json.tool)",
+      "Bash(gh auth *)",
+      "Bash(gh repo *)",
+      "PowerShell(gh auth status 2>&1)",
+      "PowerShell(gh repo view --json name,url 2>&1)"
+    ]
+  }
+}

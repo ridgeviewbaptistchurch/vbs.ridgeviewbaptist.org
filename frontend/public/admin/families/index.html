@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Families</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+    <img class="site-header__logo" data-theme-logo src="" alt="" style="display:none">
+    <span class="site-header__title" data-theme-name>VBS Admin</span>
+    <nav class="site-header__nav">
+      <a href="/admin/">Dashboard</a>
+      <a href="/admin/families/">Families</a>
+      <a href="/admin/reports/">Reports</a>
+      <a href="/admin/settings/" id="settings-link" class="hidden">Settings</a>
+      <span id="user-name" class="text-muted"></span>
+      <button class="btn btn--secondary btn--sm" id="logout-btn">Log out</button>
+    </nav>
+  </header>
+
+  <div class="container container--wide">
+    <h1 class="page-title">Families</h1>
+    <div class="search-bar">
+      <input type="search" id="search-input" placeholder="Search name, email, or phone…">
+    </div>
+    <div class="card" style="padding:0">
+      <div class="table-wrap">
+        <table id="families-table">
+          <thead>
+            <tr>
+              <th>Parent Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Home Church</th>
+              <th>Children</th>
+              <th>Registered</th>
+              <th class="no-print"></th>
+            </tr>
+          </thead>
+          <tbody id="families-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit modal -->
+  <div class="modal-backdrop hidden" id="edit-modal">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title">Edit Family</h2>
+        <button class="modal__close" id="modal-close">×</button>
+      </div>
+      <form id="edit-form">
+        <input type="hidden" name="id">
+        <div class="form-group"><label>Parent Name</label><input type="text" name="parent_name" required></div>
+        <div class="form-group"><label>Phone</label><input type="tel" name="phone" required></div>
+        <div class="form-group"><label>Email</label><input type="email" name="email" required></div>
+        <div class="form-group"><label>Home Church</label><input type="text" name="home_church" required></div>
+        <div class="flex gap-2" style="margin-top:1rem">
+          <button type="submit" class="btn btn--primary">Save</button>
+          <button type="button" class="btn btn--secondary" id="modal-cancel">Cancel</button>
+        </div>
+      </form>
+      <div id="children-section" style="margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1rem">
+        <h3 class="section-title" style="font-size:1rem">Children</h3>
+        <div id="children-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/admin/families.js"></script>
+</body>
+</html>

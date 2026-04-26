@@ -1,0 +1,20 @@
+name = "vbs-api"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+account_id = "efdb9bf05190f003e42285057bfeca6f"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "vbs-db"
+database_id = "69ee3d9d-17a7-46c2-96e0-bba2df43afc9"
+
+[[r2_buckets]]
+binding = "ASSETS"
+bucket_name = "vbs-assets"
+
+# Uncomment after Email Workers DNS setup (SPF/DKIM on ridgeviewbaptist.org)
+# [[send_email]]
+# name = "SEND_EMAIL"
+
+[vars]
+ENVIRONMENT = "production"

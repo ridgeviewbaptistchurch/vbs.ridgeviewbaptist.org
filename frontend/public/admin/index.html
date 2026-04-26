@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+    <img class="site-header__logo" data-theme-logo src="" alt="" style="display:none">
+    <span class="site-header__title" data-theme-name>VBS Admin</span>
+    <nav class="site-header__nav">
+      <a href="/admin/">Dashboard</a>
+      <a href="/admin/families/">Families</a>
+      <a href="/admin/reports/">Reports</a>
+      <a href="/admin/settings/" id="settings-link" class="hidden">Settings</a>
+      <span id="user-name" class="text-muted"></span>
+      <button class="btn btn--secondary btn--sm" id="logout-btn">Log out</button>
+    </nav>
+  </header>
+
+  <div class="container container--wide">
+    <h1 class="page-title">Dashboard</h1>
+
+    <div id="error" class="alert alert--error hidden"></div>
+
+    <div class="stats-grid" id="top-stats" style="margin-bottom:2rem">
+      <div class="card stat-card"><div class="stat-card__value" id="stat-families">—</div><div class="stat-card__label">Families</div></div>
+      <div class="card stat-card"><div class="stat-card__value" id="stat-children">—</div><div class="stat-card__label">Children</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem">
+      <div class="card">
+        <h2 class="section-title">By Grade</h2>
+        <div id="grade-breakdown"></div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Nightly Attendance</h2>
+        <div id="nightly-breakdown"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">By Home Church</h2>
+      <div id="church-breakdown"></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/admin/dashboard.js"></script>
+</body>
+</html>
