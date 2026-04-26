@@ -11,7 +11,8 @@
       "Bash(gh auth *)",
       "Bash(gh repo *)",
       "PowerShell(gh auth status 2>&1)",
-      "PowerShell(gh repo view --json name,url 2>&1)"
+      "PowerShell(gh repo view --json name,url 2>&1)",
+      "Bash(CLOUDFLARE_ACCOUNT_ID=efdb9bf05190f003e42285057bfeca6f npx wrangler pages project create vbs-registration --production-branch=main)"
     ]
   }
 }
