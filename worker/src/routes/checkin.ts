@@ -18,6 +18,28 @@ checkin.get('/sessions', async (c) => {
   return c.json({ sessions: rows.results });
 });
 
+checkin.get('/stats', async (c) => {
+  const settings = await activeYear(c.env.DB);
+  if (!settings) return c.json({ total_children: 0, checked_in: 0 });
+
+  const sessionId = c.req.query('session_id');
+
+  const [total, checkedIn] = await Promise.all([
+    c.env.DB.prepare(
+      'SELECT COUNT(*) as count FROM children ch JOIN families f ON ch.family_id = f.id WHERE f.vbs_year = ?',
+    )
+      .bind(settings.year)
+      .first<{ count: number }>(),
+    sessionId
+      ? c.env.DB.prepare('SELECT COUNT(*) as count FROM attendance WHERE session_id = ?')
+          .bind(sessionId)
+          .first<{ count: number }>()
+      : Promise.resolve({ count: 0 }),
+  ]);
+
+  return c.json({ total_children: total?.count ?? 0, checked_in: checkedIn?.count ?? 0 });
+});
+
 checkin.get('/search', async (c) => {
   const q = (c.req.query('q') ?? '').trim();
   const yearParam = c.req.query('year');

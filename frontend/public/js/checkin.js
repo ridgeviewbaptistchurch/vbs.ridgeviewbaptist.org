@@ -48,15 +48,28 @@ async function loadSessions() {
       .join('');
     select.value = String(best.id);
     currentSessionId = best.id;
+    loadStats(currentSessionId);
 
     select.addEventListener('change', () => {
       currentSessionId = Number(select.value);
+      loadStats(currentSessionId);
       const q = document.getElementById('search-input').value.trim();
       if (q) search(q);
     });
   } catch (err) {
     console.error('loadSessions failed:', err);
     select.innerHTML = '<option value="">Could not load sessions</option>';
+  }
+}
+
+async function loadStats(sessionId) {
+  try {
+    const data = await api.get(`/api/checkin/stats?session_id=${sessionId}`);
+    if (!data) return;
+    document.getElementById('stat-total').textContent = data.total_children;
+    document.getElementById('stat-checkedin').textContent = data.checked_in;
+  } catch {
+    // non-fatal
   }
 }
 
@@ -130,6 +143,7 @@ async function checkIn(childId, sessionId) {
   try {
     await api.post('/api/checkin', { child_id: Number(childId), session_id: Number(sessionId) });
     search(document.getElementById('search-input').value.trim());
+    loadStats(currentSessionId);
   } catch (err) {
     alert(err.message);
   }
@@ -140,6 +154,7 @@ async function undoCheckIn(attendanceId) {
   try {
     await api.delete(`/api/checkin/${attendanceId}`);
     search(document.getElementById('search-input').value.trim());
+    loadStats(currentSessionId);
   } catch (err) {
     alert(err.message);
   }
