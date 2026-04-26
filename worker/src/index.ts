@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import * as Sentry from '@sentry/cloudflare';
 import authRoutes from './routes/auth';
 import registerRoutes from './routes/register';
 import checkinRoutes from './routes/checkin';
@@ -50,4 +51,16 @@ app.route('/api/reports', reportsRoutes);
 app.route('/api/admin', adminRoutes);
 app.route('/api/users', usersRoutes);
 
-export default app;
+app.onError((err, c) => {
+  Sentry.captureException(err);
+  return c.json({ error: 'Internal server error' }, 500);
+});
+
+export default Sentry.withSentry(
+  (env) => ({
+    dsn: env.SENTRY_DSN,
+    tracesSampleRate: 1.0,
+    environment: env.ENVIRONMENT,
+  }),
+  { fetch: (req, env, ctx) => app.fetch(req, env, ctx) },
+);

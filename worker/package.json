@@ -8,9 +8,10 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
+    "@sentry/cloudflare": "^10.50.0",
+    "bcryptjs": "^2.4.3",
     "hono": "^4.6.0",
-    "jose": "^5.9.0",
-    "bcryptjs": "^2.4.3"
+    "jose": "^5.9.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241106.0",

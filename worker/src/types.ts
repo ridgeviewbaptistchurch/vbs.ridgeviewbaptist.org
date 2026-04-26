@@ -3,6 +3,7 @@ export interface Env {
   ASSETS: R2Bucket | undefined;
   JWT_SECRET: string;
   ENVIRONMENT: string;
+  SENTRY_DSN: string;
 }
 
 export type Role = 'super_admin' | 'staff_admin' | 'kiosk';

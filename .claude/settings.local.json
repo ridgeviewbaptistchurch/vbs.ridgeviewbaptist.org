@@ -14,7 +14,8 @@
       "PowerShell(gh repo view --json name,url 2>&1)",
       "Bash(CLOUDFLARE_ACCOUNT_ID=efdb9bf05190f003e42285057bfeca6f npx wrangler pages project create vbs-registration --production-branch=main)",
       "Bash(node -e \"const b = require\\('./node_modules/bcryptjs'\\); b.hash\\('changeme2025', 10\\).then\\(h => console.log\\('admin hash:', h\\)\\); b.hash\\('kiosk2025', 10\\).then\\(h => console.log\\('kiosk hash:', h\\)\\)\")",
-      "Bash(node -e 'const b = require\\('\\\\''./node_modules/bcryptjs'\\\\''\\); b.compare\\('\\\\''changeme2025'\\\\'', '\\\\''$2a$10$BoBCvr8IDvEBqDrJGnGyA.dCJ8XfUEPJXUPwORtNqSWxbTmemR3RG'\\\\''\\).then\\(r => console.log\\('\\\\''password matches:'\\\\'', r\\)\\)')"
+      "Bash(node -e 'const b = require\\('\\\\''./node_modules/bcryptjs'\\\\''\\); b.compare\\('\\\\''changeme2025'\\\\'', '\\\\''$2a$10$BoBCvr8IDvEBqDrJGnGyA.dCJ8XfUEPJXUPwORtNqSWxbTmemR3RG'\\\\''\\).then\\(r => console.log\\('\\\\''password matches:'\\\\'', r\\)\\)')",
+      "Bash(node -e \"require\\('@sentry/cloudflare'\\); console.log\\('ok'\\)\")"
     ]
   }
 }

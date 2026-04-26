@@ -18,3 +18,4 @@ bucket_name = "vbs-assets"
 
 [vars]
 ENVIRONMENT = "production"
+SENTRY_DSN = "https://f297ec96714c427bee06a98ab0a99cbc@o4509799469547520.ingest.us.sentry.io/4511286935093248"  # Fill in after creating a Cloudflare Workers project in Sentry
