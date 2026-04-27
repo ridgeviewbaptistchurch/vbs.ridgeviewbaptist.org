@@ -1,7 +1,5 @@
 import '/js/sentry.js';
-import { api, applyTheme } from './api.js';
-
-applyTheme();
+import { api } from './api.js';
 
 const list = document.getElementById('children-list');
 const template = document.getElementById('child-template');
