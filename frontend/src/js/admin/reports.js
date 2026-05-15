@@ -40,20 +40,24 @@ async function init() {
 }
 
 async function loadGrades(grade) {
-  const data = await api.get(`/api/reports/grades${grade ? `?grade=${grade}` : ''}`);
-  if (!data) return;
   const tbody = document.getElementById('grade-body');
-  const gradeLabels = { K: 'Kinder', '1': '1st', '2': '2nd', '3': '3rd', '4': '4th', '5': '5th' };
-  tbody.innerHTML = data.children
-    .map(
-      (ch) => `<tr>
-        <td>${ch.last_name}</td><td>${ch.first_name}</td>
-        <td>${gradeLabels[ch.grade] ?? ch.grade}</td>
-        <td>${ch.parent_name}</td><td>${ch.phone}</td>
-        <td class="text-muted">${ch.notes ?? ''}</td>
-      </tr>`,
-    )
-    .join('') || '<tr><td colspan="6" class="text-muted" style="text-align:center;padding:2rem">No children found.</td></tr>';
+  try {
+    const data = await api.get(`/api/reports/grades${grade ? `?grade=${grade}` : ''}`);
+    if (!data) return;
+    const gradeLabels = { '4YO': '4-Year-Old', PK: 'Pre-K', K: 'Kinder', '1': '1st', '2': '2nd', '3': '3rd', '4': '4th', '5': '5th', '6': '6th', '7': '7th' };
+    tbody.innerHTML = data.children
+      .map(
+        (ch) => `<tr>
+          <td>${ch.last_name}</td><td>${ch.first_name}</td>
+          <td>${gradeLabels[ch.grade] ?? ch.grade}</td>
+          <td>${ch.parent_name}</td><td>${ch.phone}</td>
+          <td class="text-muted">${ch.notes ?? ''}</td>
+        </tr>`,
+      )
+      .join('') || '<tr><td colspan="6" class="text-muted" style="text-align:center;padding:2rem">No children found.</td></tr>';
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="6" class="text-muted" style="text-align:center;padding:2rem">Error loading data: ${err.message}</td></tr>`;
+  }
 }
 
 async function loadSessions() {
