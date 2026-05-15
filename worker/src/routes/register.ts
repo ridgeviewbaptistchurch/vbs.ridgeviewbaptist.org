@@ -5,25 +5,37 @@ import type { HonoEnv, VbsSettings, Session } from '../types';
 const register = new Hono<HonoEnv>();
 
 const VALID_GRADES = ['PK', 'K', '1', '2', '3', '4', '5'] as const;
+const VALID_GENDERS = ['M', 'F'] as const;
 
 register.post('/', async (c) => {
   const body = await c.req.json<{
     parent_name: string;
     phone: string;
     email: string;
-    home_church: string;
-    children: Array<{ first_name: string; last_name: string; grade: string; notes?: string }>;
+    emergency_phone?: string;
+    home_church: string | null;
+    children: Array<{
+      first_name: string;
+      last_name: string;
+      grade: string;
+      gender?: string;
+      allergies?: string;
+      notes?: string;
+    }>;
   }>();
 
-  const { parent_name, phone, email, home_church, children } = body;
+  const { parent_name, phone, email, emergency_phone, home_church, children } = body;
 
-  if (!parent_name?.trim() || !phone?.trim() || !email?.trim() || !home_church?.trim() || !children?.length) {
+  if (!parent_name?.trim() || !phone?.trim() || !email?.trim() || !children?.length) {
     return c.json({ error: 'Missing required fields' }, 400);
   }
 
   for (const child of children) {
     if (!child.first_name?.trim() || !child.last_name?.trim() || !(VALID_GRADES as readonly string[]).includes(child.grade)) {
       return c.json({ error: 'Invalid child data' }, 400);
+    }
+    if (child.gender && !(VALID_GENDERS as readonly string[]).includes(child.gender)) {
+      return c.json({ error: 'Invalid gender value' }, 400);
     }
   }
 
@@ -32,9 +44,9 @@ register.post('/', async (c) => {
   if (!settings) return c.json({ error: 'No active VBS year' }, 500);
 
   const familyResult = await c.env.DB.prepare(
-    'INSERT INTO families (parent_name, phone, email, home_church, vbs_year) VALUES (?, ?, ?, ?, ?)',
+    'INSERT INTO families (parent_name, phone, email, emergency_phone, home_church, vbs_year) VALUES (?, ?, ?, ?, ?, ?)',
   )
-    .bind(parent_name, phone, email, home_church, settings.year)
+    .bind(parent_name, phone, email, emergency_phone ?? null, home_church ?? null, settings.year)
     .run();
 
   const familyId = familyResult.meta.last_row_id;
@@ -42,8 +54,8 @@ register.post('/', async (c) => {
   await c.env.DB.batch(
     children.map((child) =>
       c.env.DB.prepare(
-        'INSERT INTO children (family_id, first_name, last_name, grade, notes) VALUES (?, ?, ?, ?, ?)',
-      ).bind(familyId, child.first_name, child.last_name, child.grade, child.notes ?? null),
+        'INSERT INTO children (family_id, first_name, last_name, grade, gender, allergies, notes) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      ).bind(familyId, child.first_name, child.last_name, child.grade, child.gender ?? null, child.allergies ?? null, child.notes ?? null),
     ),
   );
 

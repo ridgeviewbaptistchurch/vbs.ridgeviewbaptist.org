@@ -23,7 +23,8 @@ CREATE TABLE families (
   parent_name TEXT NOT NULL,
   phone TEXT NOT NULL,
   email TEXT NOT NULL,
-  home_church TEXT NOT NULL,
+  emergency_phone TEXT,
+  home_church TEXT,
   vbs_year INTEGER NOT NULL REFERENCES vbs_settings(year),
   registered_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
@@ -34,6 +35,8 @@ CREATE TABLE children (
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
   grade TEXT NOT NULL CHECK(grade IN ('PK','K','1','2','3','4','5')),
+  gender TEXT CHECK(gender IN ('M','F')),
+  allergies TEXT,
   notes TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );

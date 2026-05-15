@@ -32,19 +32,36 @@
             <input type="text" id="parent_name" name="parent_name" required>
           </div>
           <div class="form-group">
-            <label for="phone">Phone *</label>
-            <input type="tel" id="phone" name="phone" required>
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" required>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label for="email">Email *</label>
-            <input type="email" id="email" name="email" required>
+            <label for="phone">Phone *</label>
+            <input type="tel" id="phone" name="phone" required>
           </div>
           <div class="form-group">
-            <label for="home_church">Home Church *</label>
-            <input type="text" id="home_church" name="home_church" placeholder="e.g. Ridgeview Baptist" required>
+            <label for="emergency_phone">Emergency Contact Phone</label>
+            <input type="tel" id="emergency_phone" name="emergency_phone">
           </div>
+        </div>
+
+        <h2 class="section-title" style="margin-top:1.5rem">Home Church</h2>
+        <div class="form-group">
+          <label>Do you have a home church? *</label>
+          <div style="display:flex;gap:1.5rem;margin-top:.5rem">
+            <label style="font-weight:normal;display:flex;align-items:center;gap:.4rem">
+              <input type="radio" name="has_home_church" value="yes" required> Yes
+            </label>
+            <label style="font-weight:normal;display:flex;align-items:center;gap:.4rem">
+              <input type="radio" name="has_home_church" value="no" required> No
+            </label>
+          </div>
+        </div>
+        <div class="form-group hidden" id="home-church-name-group">
+          <label for="home_church_name">Where do you regularly attend?</label>
+          <input type="text" id="home_church_name" name="home_church_name" placeholder="e.g. Ridgeview Baptist">
         </div>
 
         <h2 class="section-title" style="margin-top:1.5rem">Children</h2>
@@ -78,6 +95,7 @@
           <label>Grade Completed *</label>
           <select name="grade" required>
             <option value="">Select grade…</option>
+            <option value="PK">Pre-K</option>
             <option value="K">Finished Kindergarten</option>
             <option value="1">Finished 1st Grade</option>
             <option value="2">Finished 2nd Grade</option>
@@ -87,8 +105,25 @@
           </select>
         </div>
         <div class="form-group">
+          <label>Gender *</label>
+          <div style="display:flex;gap:1.5rem;margin-top:.5rem">
+            <label style="font-weight:normal;display:flex;align-items:center;gap:.4rem">
+              <input type="radio" name="gender" value="M" required> Male
+            </label>
+            <label style="font-weight:normal;display:flex;align-items:center;gap:.4rem">
+              <input type="radio" name="gender" value="F" required> Female
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Allergies <span class="text-muted">(optional)</span></label>
+          <input type="text" name="allergies" placeholder="Food, medication, or other allergies…">
+        </div>
+        <div class="form-group">
           <label>Notes <span class="text-muted">(optional)</span></label>
-          <input type="text" name="notes" placeholder="Allergies, special needs…">
+          <input type="text" name="notes" placeholder="Special needs, other info…">
         </div>
       </div>
     </div>
