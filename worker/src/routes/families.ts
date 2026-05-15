@@ -44,6 +44,23 @@ families.get('/:id', async (c) => {
   return c.json({ family, children: children.results });
 });
 
+families.post('/:id/children', async (c) => {
+  const { first_name, last_name, grade, gender, allergies, notes } = await c.req.json<{
+    first_name: string;
+    last_name: string;
+    grade: string;
+    gender?: string;
+    allergies?: string;
+    notes?: string;
+  }>();
+  const result = await c.env.DB.prepare(
+    'INSERT INTO children (family_id, first_name, last_name, grade, gender, allergies, notes) VALUES (?, ?, ?, ?, ?, ?, ?)',
+  )
+    .bind(c.req.param('id'), first_name, last_name, grade, gender ?? null, allergies ?? null, notes ?? null)
+    .run();
+  return c.json({ ok: true, child_id: result.meta.last_row_id });
+});
+
 families.put('/:id', async (c) => {
   const { parent_name, phone, email, home_church } = await c.req.json<{
     parent_name: string;
