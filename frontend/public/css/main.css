@@ -40,6 +40,8 @@ a { color: var(--accent); }
 .site-header__nav { margin-left: auto; display: flex; gap: .75rem; align-items: center; }
 .site-header__nav a { color: var(--muted); text-decoration: none; font-size: .875rem; }
 .site-header__nav a:hover { color: var(--text); }
+.site-header__sep { width: 1px; height: 1.25rem; background: var(--border); }
+.site-header__user { font-size: .875rem; font-weight: 500; color: var(--text); }
 
 /* Cards */
 .card {
