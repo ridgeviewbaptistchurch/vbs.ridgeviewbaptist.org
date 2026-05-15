@@ -13,6 +13,7 @@ const submitBtn = document.getElementById('submit-btn');
 const homeChurchNameGroup = document.getElementById('home-church-name-group');
 
 const MAX_CHILDREN = 6;
+let childCount = 0;
 
 // Show/hide home church name field based on yes/no selection
 form.addEventListener('change', (e) => {
@@ -26,6 +27,8 @@ form.addEventListener('change', (e) => {
 function addChild() {
   if (list.children.length >= MAX_CHILDREN) return;
   const node = template.content.cloneNode(true);
+  const idx = childCount++;
+  node.querySelectorAll('input[type=radio][name=gender]').forEach(r => { r.name = `gender_${idx}`; });
   node.querySelector('.remove-child').addEventListener('click', (e) => {
     e.currentTarget.closest('.child-entry').remove();
     addBtn.disabled = list.children.length >= MAX_CHILDREN;
@@ -47,7 +50,7 @@ form.addEventListener('submit', async (e) => {
     first_name: el.querySelector('[name=first_name]').value.trim(),
     last_name: el.querySelector('[name=last_name]').value.trim(),
     grade: el.querySelector('[name=grade]').value,
-    gender: el.querySelector('[name=gender]:checked')?.value || undefined,
+    gender: el.querySelector('input[type=radio]:checked')?.value || undefined,
     allergies: el.querySelector('[name=allergies]').value.trim() || undefined,
     notes: el.querySelector('[name=notes]').value.trim() || undefined,
   }));

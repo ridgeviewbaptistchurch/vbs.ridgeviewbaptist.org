@@ -1,6 +1,7 @@
-import '/js/sentry.js';
-import { api } from '../api.js';
+import { api, applyTheme } from '../api.js';
 import { requireAuth, logout } from '../auth.js';
+
+applyTheme();
 
 async function init() {
   const user = await requireAuth(['staff_admin', 'super_admin']);

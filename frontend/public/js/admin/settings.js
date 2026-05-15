@@ -1,5 +1,4 @@
-import '/js/sentry.js';
-import { api } from '../api.js';
+import { api, applyTheme } from '../api.js';
 import { requireAuth, logout } from '../auth.js';
 
 const API_BASE =
