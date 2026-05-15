@@ -51,7 +51,7 @@ function renderTable(families) {
       <td>${f.email}</td>
       <td>${f.home_church}</td>
       <td>${f.child_count}</td>
-      <td>${new Date(f.registered_at).toLocaleDateString()}</td>
+      <td>${new Date(f.registered_at.replace(' ', 'T') + 'Z').toLocaleString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' })}</td>
       <td class="no-print">
         <div class="flex gap-2">
           <button class="btn btn--secondary btn--sm" onclick="editFamily(${f.id})">Edit</button>
