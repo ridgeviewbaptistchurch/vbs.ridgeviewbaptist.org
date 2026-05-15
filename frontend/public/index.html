@@ -3,81 +3,123 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VBS 2026 — Ridgeview Baptist Church</title>
+  <title>Illumination Station VBS 2026 — Ridgeview Baptist Church</title>
   <link rel="stylesheet" href="/css/main.css">
   <style>
-    .hero {
+    body { background: var(--bg); }
+
+    .home-hero {
       text-align: center;
-      padding: 3rem 1rem 1.5rem;
+      padding: 4rem 1.5rem 3.5rem;
+      background: linear-gradient(160deg, #eef2ff 0%, #e0f2fe 100%);
+      border-bottom: 1px solid var(--border);
     }
-    .hero__title {
-      font-size: 2.25rem;
-      font-weight: 800;
-      color: var(--accent);
-      margin-bottom: .5rem;
+    .home-hero__logo {
+      width: min(360px, 82vw);
+      height: auto;
+      margin-bottom: 1.75rem;
+      filter: drop-shadow(0 6px 20px rgba(0,0,0,.13));
     }
-    .hero__sub {
-      font-size: 1.125rem;
+    .home-hero__church {
+      font-size: 1rem;
+      font-weight: 500;
       color: var(--muted);
+      margin-bottom: .4rem;
     }
+    .home-hero__dates {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2rem;
+    }
+    .btn--hero {
+      font-size: 1.125rem;
+      padding: .875rem 2.75rem;
+      border-radius: 50px;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(79,70,229,.35);
+    }
+    .btn--hero:hover { box-shadow: 0 6px 20px rgba(79,70,229,.45); }
+
+    .home-body {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2.5rem 1rem 3rem;
+    }
+
     .info-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
       margin-bottom: 1.5rem;
+      overflow: hidden;
     }
     .info-tile {
       text-align: center;
-      padding: 1.25rem 1rem;
+      padding: 1.5rem 1rem;
+    }
+    .info-tile + .info-tile {
+      border-left: 1px solid var(--border);
+    }
+    @media (max-width: 480px) {
+      .info-grid { grid-template-columns: 1fr; }
+      .info-tile + .info-tile { border-left: none; border-top: 1px solid var(--border); }
     }
     .info-tile__label {
-      font-size: .75rem;
+      font-size: .6875rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: .06em;
+      letter-spacing: .08em;
       color: var(--muted);
-      margin-bottom: .375rem;
+      margin-bottom: .5rem;
     }
     .info-tile__value {
       font-size: 1.0625rem;
-      font-weight: 600;
+      font-weight: 700;
+      color: var(--text);
     }
     .info-tile__detail {
       font-size: .8125rem;
       color: var(--muted);
-      margin-top: .125rem;
+      margin-top: .25rem;
     }
-    .cta {
+
+    .vbs-card { margin-bottom: 1.5rem; }
+    .vbs-desc {
+      line-height: 1.8;
+      color: var(--muted);
+      font-size: .9375rem;
+    }
+
+    .home-cta {
       text-align: center;
-      padding: 2rem 0 1rem;
+      padding: 1.5rem 0 .5rem;
     }
-    .btn--lg {
-      font-size: 1.0625rem;
-      padding: .75rem 2.25rem;
+    .home-cta p {
+      margin-top: .75rem;
+      font-size: .875rem;
+      color: var(--muted);
     }
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <img class="site-header__logo" src="/01_IlluminationStation_FullColor.png" alt="Illumination Station VBS">
-    <span class="site-header__title">VBS 2026</span>
-  </header>
+  <section class="home-hero">
+    <img class="home-hero__logo" src="/01_IlluminationStation_FullColor.png" alt="Illumination Station VBS">
+    <p class="home-hero__church">Ridgeview Baptist Church</p>
+    <p class="home-hero__dates">June 15 – 19, 2026</p>
+    <a href="/register/" class="btn btn--primary btn--hero">Register Now</a>
+  </section>
 
-  <div class="container" style="max-width:700px">
-    <div class="hero">
-      <h1 class="hero__title">VBS 2026</h1>
-      <p class="hero__sub">Vacation Bible School at Ridgeview Baptist Church</p>
-    </div>
-
-    <div class="card info-grid" style="margin-bottom:1.5rem">
+  <div class="home-body">
+    <div class="card info-grid">
       <div class="info-tile">
-        <div class="info-tile__label">Dates</div>
-        <div class="info-tile__value">June 7 – 11, 2026</div>
-        <div class="info-tile__detail">Sunday through Thursday</div>
+        <div class="info-tile__label">When</div>
+        <div class="info-tile__value">June 15 – 19</div>
+        <div class="info-tile__detail">Sunday – Thursday</div>
       </div>
       <div class="info-tile">
         <div class="info-tile__label">Ages</div>
-        <div class="info-tile__value">Preschool – 5th Grade</div>
+        <div class="info-tile__value">4 Yrs – 7th Grade</div>
         <div class="info-tile__detail">All kids welcome</div>
       </div>
       <div class="info-tile">
@@ -87,16 +129,16 @@
       </div>
     </div>
 
-    <div class="card" style="margin-bottom:1.5rem">
+    <div class="card vbs-card">
       <h2 class="section-title">What is VBS?</h2>
-      <p style="color:var(--muted);line-height:1.75">
+      <p class="vbs-desc">
         Vacation Bible School is a week of fun, faith, and friendship for kids. Each evening your children will experience Bible lessons, games, crafts, and music in a safe and welcoming environment — whether they've grown up in church or it's their first time.
       </p>
     </div>
 
-    <div class="cta">
-      <a href="/register/" class="btn btn--primary btn--lg">Register Now</a>
-      <p class="text-muted mt-4">Registration takes just a couple of minutes.</p>
+    <div class="home-cta">
+      <a href="/register/" class="btn btn--primary btn--hero">Register Now</a>
+      <p>Registration takes just a couple of minutes.</p>
     </div>
   </div>
 
