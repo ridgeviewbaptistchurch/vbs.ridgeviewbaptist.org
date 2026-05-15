@@ -4,7 +4,7 @@ import type { HonoEnv, VbsSettings, Session } from '../types';
 
 const register = new Hono<HonoEnv>();
 
-const VALID_GRADES = ['PK', 'K', '1', '2', '3', '4', '5'] as const;
+const VALID_GRADES = ['4YO', 'PK', 'K', '1', '2', '3', '4', '5', '6', '7'] as const;
 const VALID_GENDERS = ['M', 'F'] as const;
 
 register.post('/', async (c) => {

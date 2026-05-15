@@ -34,7 +34,7 @@ CREATE TABLE children (
   family_id INTEGER NOT NULL REFERENCES families(id) ON DELETE CASCADE,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
-  grade TEXT NOT NULL CHECK(grade IN ('PK','K','1','2','3','4','5')),
+  grade TEXT NOT NULL CHECK(grade IN ('4YO','PK','K','1','2','3','4','5','6','7')),
   gender TEXT CHECK(gender IN ('M','F')),
   allergies TEXT,
   notes TEXT,
@@ -59,15 +59,15 @@ CREATE TABLE attendance (
 
 -- Seed: active VBS year
 INSERT INTO vbs_settings (year, theme_name, accent_color, active)
-VALUES (2026, 'VBS 2026', '#4F46E5', 1);
+VALUES (2026, 'Illumination Station', '#4F46E5', 1);
 
--- Seed: 5 nights (Sun–Thu, June 2026 — update dates in Settings once deployed)
+-- Seed: 5 nights (Sun–Thu, June 15–19 2026)
 INSERT INTO sessions (vbs_year, label, date) VALUES
-  (2026, 'Night 1', '2026-06-07'),
-  (2026, 'Night 2', '2026-06-08'),
-  (2026, 'Night 3', '2026-06-09'),
-  (2026, 'Night 4', '2026-06-10'),
-  (2026, 'Night 5', '2026-06-11');
+  (2026, 'Night 1', '2026-06-15'),
+  (2026, 'Night 2', '2026-06-16'),
+  (2026, 'Night 3', '2026-06-17'),
+  (2026, 'Night 4', '2026-06-18'),
+  (2026, 'Night 5', '2026-06-19');
 
 -- Seed: super admin (initial password: changeme2025 — change after first login)
 INSERT INTO users (name, email, password_hash, role)
