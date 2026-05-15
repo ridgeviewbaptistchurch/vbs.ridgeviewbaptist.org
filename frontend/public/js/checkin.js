@@ -32,7 +32,7 @@ async function loadSessions() {
       return;
     }
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(new Date());
     const sessions = data.sessions;
 
     const todayIdx = sessions.findIndex((s) => s.date === today);
@@ -116,7 +116,7 @@ function familyCard(family) {
   const children = family.children
     .map((ch) => {
       const checkedIn = ch.checked_in_at;
-      const time = checkedIn ? new Date(ch.checked_in_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+      const time = checkedIn ? new Date(ch.checked_in_at.replace(' ', 'T') + 'Z').toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' }) : '';
       const action = checkedIn
         ? `<span class="badge badge--green">✓ Checked in ${time}</span>
            ${currentUser?.role === 'super_admin' ? `<button class="btn btn--sm btn--secondary" data-undo="${ch.attendance_id}" style="margin-left:.5rem">Undo</button>` : ''}`
@@ -181,17 +181,40 @@ function addWalkInChild() {
       <div class="form-group"><label>First Name *</label><input type="text" name="first_name" required></div>
       <div class="form-group"><label>Last Name *</label><input type="text" name="last_name" required></div>
     </div>
-    <div class="form-group">
-      <label>Grade *</label>
-      <select name="grade" required>
-        <option value="">Select…</option>
-        <option value="K">Finished Kindergarten</option>
-        <option value="1">Finished 1st</option>
-        <option value="2">Finished 2nd</option>
-        <option value="3">Finished 3rd</option>
-        <option value="4">Finished 4th</option>
-        <option value="5">Finished 5th</option>
-      </select>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Grade *</label>
+        <select name="grade" required>
+          <option value="">Select…</option>
+          <option value="4YO">4 Years Old</option>
+          <option value="PK">Pre-K</option>
+          <option value="K">Finished Kindergarten</option>
+          <option value="1">Finished 1st Grade</option>
+          <option value="2">Finished 2nd Grade</option>
+          <option value="3">Finished 3rd Grade</option>
+          <option value="4">Finished 4th Grade</option>
+          <option value="5">Finished 5th Grade</option>
+          <option value="6">Finished 6th Grade</option>
+          <option value="7">Finished 7th Grade</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Gender *</label>
+        <div style="display:flex;gap:1.5rem;margin-top:.5rem">
+          <label style="font-weight:normal;display:flex;align-items:center;gap:.4rem"><input type="radio" name="gender" value="M" required> Male</label>
+          <label style="font-weight:normal;display:flex;align-items:center;gap:.4rem"><input type="radio" name="gender" value="F"> Female</label>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Allergies <span class="text-muted">(optional)</span></label>
+        <input type="text" name="allergies" placeholder="Food, medication, or other allergies…">
+      </div>
+      <div class="form-group">
+        <label>Notes <span class="text-muted">(optional)</span></label>
+        <input type="text" name="notes" placeholder="Special needs, other info…">
+      </div>
     </div>`;
   div.querySelector('.remove-child').addEventListener('click', () => div.remove());
   list.appendChild(div);
@@ -200,23 +223,46 @@ function addWalkInChild() {
 async function submitWalkIn(e) {
   e.preventDefault();
   const form = e.target;
+  const parentName = form.parent_name.value.trim();
   const children = [...document.querySelectorAll('#walkin-children > div')].map((el) => ({
     first_name: el.querySelector('[name=first_name]').value.trim(),
     last_name: el.querySelector('[name=last_name]').value.trim(),
     grade: el.querySelector('[name=grade]').value,
+    gender: el.querySelector('[name=gender]:checked')?.value || null,
+    allergies: el.querySelector('[name=allergies]').value.trim() || null,
+    notes: el.querySelector('[name=notes]').value.trim() || null,
   }));
 
   try {
-    await api.post('/api/register', {
-      parent_name: form.parent_name.value.trim(),
+    const result = await api.post('/api/register', {
+      parent_name: parentName,
       phone: form.phone.value.trim(),
       email: form.email.value.trim() || 'walkin@noemail.local',
       home_church: form.home_church.value.trim(),
       children,
     });
     hideWalkInForm();
-    document.getElementById('search-input').value = form.parent_name.value.trim().split(' ').pop();
-    search(document.getElementById('search-input').value);
+    const searchTerm = parentName.split(' ').pop();
+    document.getElementById('search-input').value = searchTerm;
+
+    const sessionParam = currentSessionId ? `&session_id=${currentSessionId}` : '';
+    const data = await api.get(`/api/checkin/search?q=${encodeURIComponent(searchTerm)}${sessionParam}`);
+    if (!data) return;
+    if (!currentSessionId) currentSessionId = data.session_id;
+
+    const newFamily = data.families.find((f) => f.id === result.family_id);
+    if (newFamily && currentSessionId) {
+      await Promise.all(
+        newFamily.children
+          .filter((ch) => !ch.checked_in_at)
+          .map((ch) => api.post('/api/checkin', { child_id: ch.id, session_id: currentSessionId })),
+      );
+      const refreshed = await api.get(`/api/checkin/search?q=${encodeURIComponent(searchTerm)}&session_id=${currentSessionId}`);
+      if (refreshed) renderResults(refreshed.families);
+    } else {
+      renderResults(data.families);
+    }
+    loadStats(currentSessionId);
   } catch (err) {
     alert(err.message);
   }

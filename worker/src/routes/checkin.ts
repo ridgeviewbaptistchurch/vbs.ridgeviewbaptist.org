@@ -75,7 +75,7 @@ checkin.get('/search', async (c) => {
 
   let sessionId: number | null = sessionIdParam ? parseInt(sessionIdParam) : null;
   if (!sessionId) {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(new Date());
     const todaySession = await c.env.DB.prepare(
       'SELECT id FROM sessions WHERE vbs_year = ? AND date = ? LIMIT 1',
     )
