@@ -110,6 +110,24 @@ function renderResults(families) {
       btn.addEventListener('click', () => undoCheckIn(btn.dataset.undo));
     });
   }
+  el.querySelectorAll('[data-add-child]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.getElementById(`add-child-form-${btn.dataset.addChild}`).classList.toggle('hidden');
+    });
+  });
+  el.querySelectorAll('[data-add-child-cancel]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const section = document.getElementById(`add-child-form-${btn.dataset.addChildCancel}`);
+      section.classList.add('hidden');
+      section.querySelector('form').reset();
+    });
+  });
+  el.querySelectorAll('[data-add-child-submit]').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      submitAddChild(form.dataset.addChildSubmit, form);
+    });
+  });
 }
 
 function familyCard(family) {
@@ -132,9 +150,60 @@ function familyCard(family) {
   return `<div class="family-card card" style="padding:0;overflow:hidden">
     <div style="padding:.875rem 1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
       <div><strong>${family.parent_name}</strong> <span class="text-muted">${family.phone}</span></div>
-      <span class="badge badge--blue">${family.children.length} child${family.children.length !== 1 ? 'ren' : ''}</span>
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <button class="btn btn--sm btn--secondary no-print" data-add-child="${family.id}">+ Add Child</button>
+        <span class="badge badge--blue">${family.children.length} child${family.children.length !== 1 ? 'ren' : ''}</span>
+      </div>
     </div>
     ${children}
+    <div id="add-child-form-${family.id}" class="hidden" style="padding:1rem;border-top:1px solid var(--border)">
+      <h3 style="margin:0 0 .75rem;font-size:.9375rem">Add Child</h3>
+      <form data-add-child-submit="${family.id}">
+        <div class="form-row">
+          <div class="form-group"><label>First Name *</label><input type="text" name="first_name" required></div>
+          <div class="form-group"><label>Last Name *</label><input type="text" name="last_name" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Grade *</label>
+            <select name="grade" required>
+              <option value="">Select…</option>
+              <option value="4YO">4 Years Old</option>
+              <option value="PK">Pre-K</option>
+              <option value="K">Finished Kindergarten</option>
+              <option value="1">Finished 1st Grade</option>
+              <option value="2">Finished 2nd Grade</option>
+              <option value="3">Finished 3rd Grade</option>
+              <option value="4">Finished 4th Grade</option>
+              <option value="5">Finished 5th Grade</option>
+              <option value="6">Finished 6th Grade</option>
+              <option value="7">Finished 7th Grade</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <div style="display:flex;gap:1.5rem;margin-top:.5rem">
+              <label style="font-weight:normal;display:flex;align-items:center;gap:.4rem"><input type="radio" name="gender" value="M"> Male</label>
+              <label style="font-weight:normal;display:flex;align-items:center;gap:.4rem"><input type="radio" name="gender" value="F"> Female</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Allergies <span class="text-muted">(optional)</span></label>
+            <input type="text" name="allergies" placeholder="Food, medication, or other allergies…">
+          </div>
+          <div class="form-group">
+            <label>Notes <span class="text-muted">(optional)</span></label>
+            <input type="text" name="notes" placeholder="Special needs, other info…">
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button type="submit" class="btn btn--primary btn--sm">Add Child</button>
+          <button type="button" class="btn btn--secondary btn--sm" data-add-child-cancel="${family.id}">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>`;
 }
 
@@ -151,6 +220,22 @@ async function undoCheckIn(attendanceId) {
   if (!confirm('Remove this check-in?')) return;
   try {
     await api.delete(`/api/checkin/${attendanceId}`);
+    search(document.getElementById('search-input').value.trim());
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+async function submitAddChild(familyId, form) {
+  try {
+    await api.post(`/api/families/${familyId}/children`, {
+      first_name: form.first_name.value.trim(),
+      last_name: form.last_name.value.trim(),
+      grade: form.grade.value,
+      gender: form.querySelector('[name=gender]:checked')?.value || null,
+      allergies: form.allergies.value.trim() || null,
+      notes: form.notes.value.trim() || null,
+    });
     search(document.getElementById('search-input').value.trim());
   } catch (err) {
     alert(err.message);

@@ -18,6 +18,9 @@ async function init() {
   document.getElementById('walkin-cancel').addEventListener('click', hideWalkInForm);
   document.getElementById('walkin-form').addEventListener('submit', submitWalkIn);
   document.getElementById('walkin-add-child').addEventListener('click', addWalkInChild);
+
+  await loadSessions();
+  loadStats(currentSessionId);
 }
 
 function onSearch(e) {
