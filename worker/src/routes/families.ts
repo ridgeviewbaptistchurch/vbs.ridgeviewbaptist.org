@@ -14,11 +14,11 @@ families.get('/', async (c) => {
   const vbsYear = yearParam ? parseInt(yearParam) : settings?.year;
 
   const sql = q
-    ? `SELECT f.*, COUNT(ch.id) as child_count FROM families f
+    ? `SELECT f.*, COUNT(ch.id) as child_count, GROUP_CONCAT(ch.first_name || ' ' || ch.last_name, ', ') as child_names FROM families f
        LEFT JOIN children ch ON ch.family_id = f.id
        WHERE f.vbs_year = ? AND (f.parent_name LIKE ? OR f.email LIKE ? OR f.phone LIKE ?)
        GROUP BY f.id ORDER BY f.registered_at DESC LIMIT 500`
-    : `SELECT f.*, COUNT(ch.id) as child_count FROM families f
+    : `SELECT f.*, COUNT(ch.id) as child_count, GROUP_CONCAT(ch.first_name || ' ' || ch.last_name, ', ') as child_names FROM families f
        LEFT JOIN children ch ON ch.family_id = f.id
        WHERE f.vbs_year = ?
        GROUP BY f.id ORDER BY f.registered_at DESC LIMIT 500`;
