@@ -6,13 +6,31 @@
   <title>Illumination Station VBS 2026 — Ridgeview Baptist Church</title>
   <link rel="stylesheet" href="/css/main.css">
   <style>
-    body { background: var(--bg); }
+    body {
+      background: transparent;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url('/scarlett-alt-QOajY0MNp8Y-unsplash.jpg') center / cover no-repeat;
+      filter: blur(2px);
+      transform: scale(1.04);
+      z-index: -2;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.28);
+      z-index: -1;
+    }
 
     .home-hero {
       text-align: center;
       padding: 4rem 1.5rem 3.5rem;
-      background: linear-gradient(160deg, #eef2ff 0%, #e0f2fe 100%);
-      border-bottom: 1px solid var(--border);
+      background: linear-gradient(160deg, rgba(238,242,255,0.80) 0%, rgba(224,242,254,0.80) 100%);
+      border-bottom: 1px solid rgba(229,231,235,0.6);
     }
     .home-hero__logo {
       width: min(360px, 82vw);
