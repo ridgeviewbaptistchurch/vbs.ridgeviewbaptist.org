@@ -23,6 +23,9 @@ async function init() {
   document.getElementById('modal-close').addEventListener('click', closeModal);
   document.getElementById('modal-cancel').addEventListener('click', closeModal);
   document.getElementById('edit-form').addEventListener('submit', saveFamily);
+  document.getElementById('child-modal-close').addEventListener('click', closeChildModal);
+  document.getElementById('child-modal-cancel').addEventListener('click', closeChildModal);
+  document.getElementById('edit-child-form').addEventListener('submit', saveChild);
 
   loadFamilies();
 }
@@ -74,9 +77,15 @@ window.editFamily = async (id) => {
   const childrenEl = document.getElementById('children-list');
   childrenEl.innerHTML = data.children.map((ch) => `
     <div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border)">
-      <span>${ch.first_name} ${ch.last_name} <span class="badge badge--gray">${ch.grade}</span>${ch.notes ? ` <em class="text-muted">${ch.notes}</em>` : ''}</span>
+      <span>
+        ${ch.first_name} ${ch.last_name}
+        <span class="badge badge--gray">${ch.grade}</span>
+        ${ch.gender ? `<span class="badge badge--blue">${ch.gender === 'M' ? 'Male' : 'Female'}</span>` : ''}
+        ${ch.allergies ? `<span class="text-muted" style="font-size:.8rem"> — Allergies: ${ch.allergies}</span>` : ''}
+        ${ch.notes ? `<em class="text-muted"> — ${ch.notes}</em>` : ''}
+      </span>
       <div class="flex gap-2">
-        <button class="btn btn--secondary btn--sm" onclick="editChild(${ch.id})">Edit</button>
+        <button class="btn btn--secondary btn--sm" onclick="editChild(${ch.id}, ${id})">Edit</button>
         ${currentUser.role === 'super_admin' ? `<button class="btn btn--danger btn--sm" onclick="deleteChild(${ch.id}, ${id})">×</button>` : ''}
       </div>
     </div>`).join('');
@@ -84,14 +93,39 @@ window.editFamily = async (id) => {
   document.getElementById('edit-modal').classList.remove('hidden');
 };
 
-window.editChild = async (id) => {
-  const fn = prompt('First name:');
-  const ln = prompt('Last name:');
-  const grade = prompt('Grade (K,1,2,3,4,5):');
-  if (!fn || !ln || !grade) return;
-  await api.put(`/api/children/${id}`, { first_name: fn, last_name: ln, grade, notes: null });
-  alert('Saved.');
+window.editChild = async (id, familyId) => {
+  const ch = await api.get(`/api/children/${id}`);
+  if (!ch) return;
+  const form = document.getElementById('edit-child-form');
+  form.id.value = ch.id;
+  form.family_id.value = familyId;
+  form.first_name.value = ch.first_name;
+  form.last_name.value = ch.last_name;
+  form.grade.value = ch.grade;
+  form.querySelectorAll('[name=gender]').forEach((r) => { r.checked = r.value === ch.gender; });
+  form.allergies.value = ch.allergies || '';
+  form.notes.value = ch.notes || '';
+  document.getElementById('edit-child-modal').classList.remove('hidden');
 };
+
+async function saveChild(e) {
+  e.preventDefault();
+  const form = e.target;
+  await api.put(`/api/children/${form.id.value}`, {
+    first_name: form.first_name.value,
+    last_name: form.last_name.value,
+    grade: form.grade.value,
+    gender: form.querySelector('[name=gender]:checked')?.value || null,
+    allergies: form.allergies.value.trim() || null,
+    notes: form.notes.value.trim() || null,
+  });
+  closeChildModal();
+  editFamily(Number(form.family_id.value));
+}
+
+function closeChildModal() {
+  document.getElementById('edit-child-modal').classList.add('hidden');
+}
 
 window.deleteChild = async (childId, familyId) => {
   if (!confirm('Delete this child?')) return;

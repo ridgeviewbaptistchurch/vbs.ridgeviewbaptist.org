@@ -71,6 +71,56 @@
     </div>
   </div>
 
+  <!-- Edit child modal -->
+  <div class="modal-backdrop hidden" id="edit-child-modal">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title">Edit Child</h2>
+        <button class="modal__close" id="child-modal-close">×</button>
+      </div>
+      <form id="edit-child-form">
+        <input type="hidden" name="id">
+        <input type="hidden" name="family_id">
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" name="first_name" required></div>
+          <div class="form-group"><label>Last Name</label><input type="text" name="last_name" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Grade</label>
+            <select name="grade" required>
+              <option value="4YO">4 Years Old</option>
+              <option value="PK">Pre-K</option>
+              <option value="K">Finished Kindergarten</option>
+              <option value="1">Finished 1st Grade</option>
+              <option value="2">Finished 2nd Grade</option>
+              <option value="3">Finished 3rd Grade</option>
+              <option value="4">Finished 4th Grade</option>
+              <option value="5">Finished 5th Grade</option>
+              <option value="6">Finished 6th Grade</option>
+              <option value="7">Finished 7th Grade</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <div style="display:flex;gap:1.5rem;margin-top:.5rem">
+              <label style="font-weight:normal;display:flex;align-items:center;gap:.4rem"><input type="radio" name="gender" value="M"> Male</label>
+              <label style="font-weight:normal;display:flex;align-items:center;gap:.4rem"><input type="radio" name="gender" value="F"> Female</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Allergies</label><input type="text" name="allergies" placeholder="Food, medication, or other allergies…"></div>
+          <div class="form-group"><label>Notes</label><input type="text" name="notes" placeholder="Special needs, other info…"></div>
+        </div>
+        <div class="flex gap-2" style="margin-top:1rem">
+          <button type="submit" class="btn btn--primary">Save</button>
+          <button type="button" class="btn btn--secondary" id="child-modal-cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script type="module" src="/js/admin/families.js"></script>
 </body>
 </html>

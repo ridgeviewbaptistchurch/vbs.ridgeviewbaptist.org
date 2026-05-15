@@ -15,16 +15,18 @@ children.get('/:id', async (c) => {
 });
 
 children.put('/:id', async (c) => {
-  const { first_name, last_name, grade, notes } = await c.req.json<{
+  const { first_name, last_name, grade, gender, allergies, notes } = await c.req.json<{
     first_name: string;
     last_name: string;
     grade: string;
+    gender?: string;
+    allergies?: string;
     notes?: string;
   }>();
   await c.env.DB.prepare(
-    'UPDATE children SET first_name = ?, last_name = ?, grade = ?, notes = ? WHERE id = ?',
+    'UPDATE children SET first_name = ?, last_name = ?, grade = ?, gender = ?, allergies = ?, notes = ? WHERE id = ?',
   )
-    .bind(first_name, last_name, grade, notes ?? null, c.req.param('id'))
+    .bind(first_name, last_name, grade, gender ?? null, allergies ?? null, notes ?? null, c.req.param('id'))
     .run();
   return c.json({ ok: true });
 });
