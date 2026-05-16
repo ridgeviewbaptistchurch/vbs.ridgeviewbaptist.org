@@ -51,10 +51,11 @@ async function loadGrades(grade) {
           <td>${ch.last_name}</td><td>${ch.first_name}</td>
           <td>${gradeLabels[ch.grade] ?? ch.grade}</td>
           <td>${ch.parent_name}</td><td>${ch.phone}</td>
+          <td class="text-muted">${ch.allergies ?? ''}</td>
           <td class="text-muted">${ch.notes ?? ''}</td>
         </tr>`,
       )
-      .join('') || '<tr><td colspan="6" class="text-muted" style="text-align:center;padding:2rem">No children found.</td></tr>';
+      .join('') || '<tr><td colspan="7" class="text-muted" style="text-align:center;padding:2rem">No children found.</td></tr>';
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="6" class="text-muted" style="text-align:center;padding:2rem">Error loading data: ${err.message}</td></tr>`;
   }
