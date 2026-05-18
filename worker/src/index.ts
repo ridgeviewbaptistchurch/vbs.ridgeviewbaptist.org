@@ -40,6 +40,15 @@ app.get('/api/assets/*', async (c) => {
   return new Response(obj.body, { headers });
 });
 
+app.get('/api/health', (c) => c.json({ ok: true }));
+
+app.get('/api/stats/registrations', async (c) => {
+  const row = await c.env.DB.prepare(
+    `SELECT COUNT(*) AS total FROM families WHERE year = (SELECT year FROM vbs_settings WHERE active = 1 LIMIT 1)`,
+  ).first<{ total: number }>();
+  return c.json({ total: row?.total ?? 0 });
+});
+
 app.route('/api/auth', authRoutes);
 app.route('/api/settings', settingsRoutes);
 app.route('/api/register', registerRoutes);
