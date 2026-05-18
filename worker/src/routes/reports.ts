@@ -15,7 +15,7 @@ reports.get('/grades', async (c) => {
 
   const rows = grade
     ? await c.env.DB.prepare(
-        `SELECT ch.first_name, ch.last_name, ch.grade, ch.allergies, ch.notes, f.parent_name, f.phone
+        `SELECT ch.first_name, ch.last_name, ch.grade, ch.allergies, ch.notes, f.parent_name, f.phone, f.church_interest
          FROM children ch JOIN families f ON f.id = ch.family_id
          WHERE f.vbs_year = ? AND ch.grade = ?
          ORDER BY ch.last_name, ch.first_name`,
@@ -23,7 +23,7 @@ reports.get('/grades', async (c) => {
         .bind(vbsYear, grade)
         .all()
     : await c.env.DB.prepare(
-        `SELECT ch.first_name, ch.last_name, ch.grade, ch.allergies, ch.notes, f.parent_name, f.phone
+        `SELECT ch.first_name, ch.last_name, ch.grade, ch.allergies, ch.notes, f.parent_name, f.phone, f.church_interest
          FROM children ch JOIN families f ON f.id = ch.family_id
          WHERE f.vbs_year = ?
          ORDER BY ch.grade, ch.last_name, ch.first_name`,
@@ -58,7 +58,7 @@ reports.get('/export/families', async (c) => {
   const vbsYear = yearParam ? parseInt(yearParam) : settings?.year;
 
   const rows = await c.env.DB.prepare(
-    `SELECT f.parent_name, f.phone, f.email, f.home_church, f.registered_at,
+    `SELECT f.parent_name, f.phone, f.email, f.home_church, f.church_interest, f.registered_at,
             ch.first_name, ch.last_name, ch.grade, ch.allergies, ch.notes
      FROM families f JOIN children ch ON ch.family_id = f.id
      WHERE f.vbs_year = ?
@@ -67,11 +67,11 @@ reports.get('/export/families', async (c) => {
     .bind(vbsYear)
     .all<Record<string, string>>();
 
-  const headers = ['Parent Name', 'Phone', 'Email', 'Home Church', 'Registered At', 'Child First Name', 'Child Last Name', 'Grade', 'Allergies', 'Notes'];
+  const headers = ['Parent Name', 'Phone', 'Email', 'Home Church', 'Church Interest', 'Registered At', 'Child First Name', 'Child Last Name', 'Grade', 'Allergies', 'Notes'];
   const lines = [headers.join(',')];
   for (const r of rows.results) {
     lines.push(
-      [r.parent_name, r.phone, r.email, r.home_church, r.registered_at, r.first_name, r.last_name, r.grade, r.allergies ?? '', r.notes ?? '']
+      [r.parent_name, r.phone, r.email, r.home_church ?? '', r.church_interest === '1' || r.church_interest === 1 ? 'Yes' : 'No', r.registered_at, r.first_name, r.last_name, r.grade, r.allergies ?? '', r.notes ?? '']
         .map((v) => `"${String(v).replace(/"/g, '""')}"`)
         .join(','),
     );

@@ -65,6 +65,7 @@ form.addEventListener('submit', async (e) => {
       email: form.email.value.trim(),
       emergency_phone: form.emergency_phone.value.trim() || undefined,
       home_church: hasHomeChurch ? form.home_church_name.value.trim() : null,
+      church_interest: form.church_interest.checked,
       children,
     });
     formCard.classList.add('hidden');

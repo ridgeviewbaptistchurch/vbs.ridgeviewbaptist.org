@@ -14,6 +14,7 @@ register.post('/', async (c) => {
     email: string;
     emergency_phone?: string;
     home_church: string | null;
+    church_interest?: boolean;
     children: Array<{
       first_name: string;
       last_name: string;
@@ -24,7 +25,7 @@ register.post('/', async (c) => {
     }>;
   }>();
 
-  const { parent_name, phone, email, emergency_phone, home_church, children } = body;
+  const { parent_name, phone, email, emergency_phone, home_church, church_interest, children } = body;
 
   if (!parent_name?.trim() || !phone?.trim() || !email?.trim() || !children?.length) {
     return c.json({ error: 'Missing required fields' }, 400);
@@ -44,9 +45,9 @@ register.post('/', async (c) => {
   if (!settings) return c.json({ error: 'No active VBS year' }, 500);
 
   const familyResult = await c.env.DB.prepare(
-    'INSERT INTO families (parent_name, phone, email, emergency_phone, home_church, vbs_year) VALUES (?, ?, ?, ?, ?, ?)',
+    'INSERT INTO families (parent_name, phone, email, emergency_phone, home_church, church_interest, vbs_year) VALUES (?, ?, ?, ?, ?, ?, ?)',
   )
-    .bind(parent_name, phone, email, emergency_phone ?? null, home_church ?? null, settings.year)
+    .bind(parent_name, phone, email, emergency_phone ?? null, home_church ?? null, church_interest ? 1 : 0, settings.year)
     .run();
 
   const familyId = familyResult.meta.last_row_id;

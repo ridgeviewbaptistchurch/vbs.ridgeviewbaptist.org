@@ -25,6 +25,7 @@ CREATE TABLE families (
   email TEXT NOT NULL,
   emergency_phone TEXT,
   home_church TEXT,
+  church_interest INTEGER NOT NULL DEFAULT 0,
   vbs_year INTEGER NOT NULL REFERENCES vbs_settings(year),
   registered_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
