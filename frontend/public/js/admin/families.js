@@ -52,7 +52,7 @@ function renderTable(families) {
       <td><strong>${f.parent_name}</strong></td>
       <td>${f.phone}</td>
       <td>${f.email}</td>
-      <td>${f.home_church}</td>
+      <td>${f.home_church ?? ''}</td>
       <td>${f.child_names ?? '—'} <span class="text-muted" style="font-size:.8rem">(${f.child_count})</span></td>
       <td>${new Date(f.registered_at.replace(' ', 'T') + 'Z').toLocaleString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' })}</td>
       <td class="no-print">
