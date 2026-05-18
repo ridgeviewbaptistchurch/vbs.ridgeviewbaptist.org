@@ -324,6 +324,7 @@ async function submitWalkIn(e) {
       phone: form.phone.value.trim(),
       email: form.email.value.trim() || undefined,
       home_church: form.home_church.value.trim(),
+      no_email: true,
       children,
     });
     hideWalkInForm();

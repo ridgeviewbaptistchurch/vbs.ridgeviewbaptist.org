@@ -15,6 +15,7 @@ register.post('/', async (c) => {
     emergency_phone?: string;
     home_church: string | null;
     church_interest?: boolean;
+    no_email?: boolean;
     children: Array<{
       first_name: string;
       last_name: string;
@@ -25,7 +26,7 @@ register.post('/', async (c) => {
     }>;
   }>();
 
-  const { parent_name, phone, email, emergency_phone, home_church, church_interest, children } = body;
+  const { parent_name, phone, email, emergency_phone, home_church, church_interest, children, no_email } = body;
 
   if (!parent_name?.trim() || !phone?.trim() || !children?.length) {
     return c.json({ error: 'Missing required fields' }, 400);
@@ -66,7 +67,7 @@ register.post('/', async (c) => {
     .bind(settings.year)
     .all<Session>();
 
-  if (email?.trim()) {
+  if (!no_email && email?.trim()) {
     c.executionCtx.waitUntil(
       sendConfirmationEmail(c.env, {
         to: email,
