@@ -3,6 +3,9 @@ import { authMiddleware, requireRole } from '../middleware/auth';
 import { activeYear } from '../lib/db';
 import type { HonoEnv } from '../types';
 
+const VALID_GRADES = ['4YO', 'PK', 'K', '1', '2', '3', '4', '5', '6', '7'] as const;
+const VALID_GENDERS = ['M', 'F'] as const;
+
 const families = new Hono<HonoEnv>();
 
 families.use('/*', authMiddleware, requireRole('staff_admin', 'super_admin'));
@@ -53,6 +56,14 @@ families.post('/:id/children', async (c) => {
     allergies?: string;
     notes?: string;
   }>();
+
+  if (!first_name?.trim() || !last_name?.trim() || !(VALID_GRADES as readonly string[]).includes(grade)) {
+    return c.json({ error: 'Invalid child data' }, 400);
+  }
+  if (gender && !(VALID_GENDERS as readonly string[]).includes(gender)) {
+    return c.json({ error: 'Invalid gender value' }, 400);
+  }
+
   const result = await c.env.DB.prepare(
     'INSERT INTO children (family_id, first_name, last_name, grade, gender, allergies, notes) VALUES (?, ?, ?, ?, ?, ?, ?)',
   )
@@ -68,6 +79,11 @@ families.put('/:id', async (c) => {
     email: string;
     home_church: string;
   }>();
+
+  if (!parent_name?.trim() || !phone?.trim() || !email?.trim()) {
+    return c.json({ error: 'Missing required fields' }, 400);
+  }
+
   await c.env.DB.prepare(
     'UPDATE families SET parent_name = ?, phone = ?, email = ?, home_church = ? WHERE id = ?',
   )

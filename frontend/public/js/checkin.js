@@ -322,7 +322,7 @@ async function submitWalkIn(e) {
     const result = await api.post('/api/register', {
       parent_name: parentName,
       phone: form.phone.value.trim(),
-      email: form.email.value.trim() || 'walkin@noemail.local',
+      email: form.email.value.trim() || undefined,
       home_church: form.home_church.value.trim(),
       children,
     });

@@ -10,6 +10,7 @@ interface EmailParams {
 
 const gradeLabel = (grade: string): string => {
   const map: Record<string, string> = {
+    '4YO': '4 Years Old',
     PK: 'Pre-K',
     K: 'Kindergarten',
     '1': '1st Grade',
@@ -17,6 +18,8 @@ const gradeLabel = (grade: string): string => {
     '3': '3rd Grade',
     '4': '4th Grade',
     '5': '5th Grade',
+    '6': '6th Grade',
+    '7': '7th Grade',
   };
   return map[grade] ?? grade;
 };

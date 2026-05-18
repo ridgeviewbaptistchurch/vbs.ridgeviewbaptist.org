@@ -11,7 +11,7 @@ register.post('/', async (c) => {
   const body = await c.req.json<{
     parent_name: string;
     phone: string;
-    email: string;
+    email?: string;
     emergency_phone?: string;
     home_church: string | null;
     church_interest?: boolean;
@@ -27,7 +27,7 @@ register.post('/', async (c) => {
 
   const { parent_name, phone, email, emergency_phone, home_church, church_interest, children } = body;
 
-  if (!parent_name?.trim() || !phone?.trim() || !email?.trim() || !children?.length) {
+  if (!parent_name?.trim() || !phone?.trim() || !children?.length) {
     return c.json({ error: 'Missing required fields' }, 400);
   }
 
@@ -47,7 +47,7 @@ register.post('/', async (c) => {
   const familyResult = await c.env.DB.prepare(
     'INSERT INTO families (parent_name, phone, email, emergency_phone, home_church, church_interest, vbs_year) VALUES (?, ?, ?, ?, ?, ?, ?)',
   )
-    .bind(parent_name, phone, email, emergency_phone ?? null, home_church ?? null, church_interest ? 1 : 0, settings.year)
+    .bind(parent_name, phone, email ?? '', emergency_phone ?? null, home_church ?? null, church_interest ? 1 : 0, settings.year)
     .run();
 
   const familyId = familyResult.meta.last_row_id;
@@ -66,15 +66,17 @@ register.post('/', async (c) => {
     .bind(settings.year)
     .all<Session>();
 
-  c.executionCtx.waitUntil(
-    sendConfirmationEmail(c.env, {
-      to: email,
-      parentName: parent_name,
-      children,
-      settings,
-      sessions: sessions.results,
-    }),
-  );
+  if (email?.trim()) {
+    c.executionCtx.waitUntil(
+      sendConfirmationEmail(c.env, {
+        to: email,
+        parentName: parent_name,
+        children,
+        settings,
+        sessions: sessions.results,
+      }),
+    );
+  }
 
   return c.json({ ok: true, family_id: familyId });
 });
