@@ -4,6 +4,7 @@ export interface Env {
   JWT_SECRET: string;
   ENVIRONMENT: string;
   SENTRY_DSN: string;
+  SEND_EMAIL: SendEmail;
 }
 
 export type Role = 'super_admin' | 'staff_admin' | 'kiosk';

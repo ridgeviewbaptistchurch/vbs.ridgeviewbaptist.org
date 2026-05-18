@@ -13,9 +13,8 @@ database_id = "69ee3d9d-17a7-46c2-96e0-bba2df43afc9"
 binding = "ASSETS"
 bucket_name = "vbs-assets"
 
-# Uncomment after Email Workers DNS setup (SPF/DKIM on ridgeviewbaptist.org)
-# [[send_email]]
-# name = "SEND_EMAIL"
+[[send_email]]
+name = "SEND_EMAIL"
 
 [vars]
 ENVIRONMENT = "production"

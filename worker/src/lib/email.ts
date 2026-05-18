@@ -78,38 +78,11 @@ export async function sendConfirmationEmail(env: Env, params: EmailParams): Prom
 </body>
 </html>`;
 
-  // Email Workers send_email binding — activated after DNS setup (SPF/DKIM)
-  // See spec Step 9 and wrangler.toml [[send_email]] comment
-  if (env.ENVIRONMENT !== 'production') {
-    console.log('[email stub]', subject, 'to', to);
-    console.log(text);
-    return;
-  }
-
-  // Build a minimal RFC 2822 message
-  const boundary = `----=_Part_${Date.now()}`;
-  const raw = [
-    `From: VBS Registration <noreply@vbs.ridgeviewbaptist.org>`,
-    `To: ${to}`,
-    `Subject: ${subject}`,
-    `MIME-Version: 1.0`,
-    `Content-Type: multipart/alternative; boundary="${boundary}"`,
-    '',
-    `--${boundary}`,
-    `Content-Type: text/plain; charset=utf-8`,
-    '',
+  await env.SEND_EMAIL.send({
+    from: 'noreply@vbs.ridgeviewbaptist.org',
+    to,
+    subject,
     text,
-    '',
-    `--${boundary}`,
-    `Content-Type: text/html; charset=utf-8`,
-    '',
     html,
-    '',
-    `--${boundary}--`,
-  ].join('\r\n');
-
-  // @ts-expect-error — SEND_EMAIL binding added after DNS setup
-  const message = new EmailMessage('noreply@vbs.ridgeviewbaptist.org', to, raw);
-  // @ts-expect-error — SEND_EMAIL binding added after DNS setup
-  await env.SEND_EMAIL.send(message);
+  });
 }
