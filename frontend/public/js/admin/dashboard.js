@@ -29,7 +29,7 @@ async function init() {
 
     const maxChurch = Math.max(...stats.by_church.map((c) => c.count), 1);
     document.getElementById('church-breakdown').innerHTML = stats.by_church
-      .map((c) => row(c.home_church ?? '', c.count, maxChurch))
+      .map((c) => row(c.home_church ?? '(None)', c.count, maxChurch))
       .join('') || '<p class="text-muted">No data yet.</p>';
   } catch (err) {
     document.getElementById('error').textContent = err.message;
