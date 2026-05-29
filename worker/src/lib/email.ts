@@ -207,7 +207,7 @@ export async function sendConfirmationEmail(env: Env, params: EmailParams): Prom
 </html>`;
 
   await env.SEND_EMAIL.send({
-    from: 'noreply@vbs.ridgeviewbaptist.org',
+    from: 'RBC VBS <noreply@vbs.ridgeviewbaptist.org>',
     to,
     subject,
     text,
