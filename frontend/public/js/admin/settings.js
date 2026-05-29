@@ -26,6 +26,7 @@ async function init() {
   document.getElementById('add-user-close').addEventListener('click', closeUserModal);
   document.getElementById('add-user-cancel').addEventListener('click', closeUserModal);
   document.getElementById('add-user-form').addEventListener('submit', addUser);
+  document.getElementById('resend-btn').addEventListener('click', resendConfirmations);
 }
 
 async function loadTheme() {
@@ -134,6 +135,24 @@ async function addUser(e) {
 
 function closeUserModal() {
   document.getElementById('add-user-modal').classList.add('hidden');
+}
+
+async function resendConfirmations() {
+  const btn = document.getElementById('resend-btn');
+  const msg = document.getElementById('resend-msg');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  msg.classList.add('hidden');
+
+  const result = await api.post('/api/admin/resend-confirmations', {});
+  btn.disabled = false;
+  btn.textContent = 'Resend Confirmation Emails';
+
+  if (result) {
+    msg.textContent = `Done — ${result.sent} email${result.sent !== 1 ? 's' : ''} sent.`;
+    msg.classList.remove('hidden');
+    setTimeout(() => msg.classList.add('hidden'), 5000);
+  }
 }
 
 function showSaved() {

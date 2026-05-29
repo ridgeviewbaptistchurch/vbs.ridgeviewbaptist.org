@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
 import { authMiddleware, requireRole } from '../middleware/auth';
 import { activeYear } from '../lib/db';
-import type { HonoEnv } from '../types';
+import { sendConfirmationEmail } from '../lib/email';
+import type { HonoEnv, Session, VbsSettings } from '../types';
 
 const admin = new Hono<HonoEnv>();
 
@@ -45,6 +46,46 @@ admin.get('/stats', async (c) => {
     by_church: byChurch.results,
     nightly_attendance: nightly.results,
   });
+});
+
+admin.post('/resend-confirmations', async (c) => {
+  const settings = await c.env.DB.prepare('SELECT * FROM vbs_settings WHERE active = 1 LIMIT 1')
+    .first<VbsSettings>();
+  if (!settings) return c.json({ error: 'No active VBS year' }, 500);
+
+  const sessions = await c.env.DB.prepare(
+    'SELECT * FROM sessions WHERE vbs_year = ? ORDER BY date ASC',
+  )
+    .bind(settings.year)
+    .all<Session>();
+
+  const families = await c.env.DB.prepare(
+    "SELECT * FROM families WHERE vbs_year = ? AND email != '' AND email IS NOT NULL",
+  )
+    .bind(settings.year)
+    .all<{ id: number; parent_name: string; email: string }>();
+
+  let sent = 0;
+  for (const family of families.results) {
+    const children = await c.env.DB.prepare(
+      'SELECT first_name, last_name, grade FROM children WHERE family_id = ?',
+    )
+      .bind(family.id)
+      .all<{ first_name: string; last_name: string; grade: string }>();
+
+    c.executionCtx.waitUntil(
+      sendConfirmationEmail(c.env, {
+        to: family.email,
+        parentName: family.parent_name,
+        children: children.results,
+        settings,
+        sessions: sessions.results,
+      }),
+    );
+    sent++;
+  }
+
+  return c.json({ ok: true, sent });
 });
 
 export default admin;
